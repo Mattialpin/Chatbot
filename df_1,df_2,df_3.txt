@@ -1,0 +1,27 @@
+df_1
+{"16":"User identity management, Permissions, Badge, Mail"}
+
+df_1_email
+df_1_rights
+df_1_computer    
+df_1_software
+
+df_2
+{"12":"Standard Software: Operating systems, Microsoft Office, Citrix clients, CRM Plugin, Acrobat Reader etc."}
+
+df_2_pc  
+df_2_email   
+df_2_access
+df_2_software   
+
+df_3
+{"11":"Hardware, Telephony, Smartphones, Monitor, Printer, etc"}
+
+df_3_printer	
+df_3_docking 	
+df_3_tcp	
+df_3_db		X
+df_3_pc
+df_3_vulnerabilities
+df_3_email
+df_3_software
