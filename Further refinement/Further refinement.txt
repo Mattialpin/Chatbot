@@ -1,0 +1,124 @@
+import pandas as pd
+import re
+
+
+
+related_words = ['Phishing', 'Pesca fraudolenta', 'Inganno online', 'Truffa informatica', 'Frode via email',
+    'Phishing', 'Online scam', 'Email fraud', 'Deceptive online tactics', 'Cyber deception',
+    'Phishing', 'Online-Betrug', 'Internet-Täuschung', 'E-Mail-Betrug', 'Cyber-Betrug',
+    'Inganno informatico', 'Pesca di informazioni', 'Truffa digitale',
+    'Digital deception', 'Information harvesting', 'Online fraud',
+    'Digitale Täuschung', 'Informationsdiebstahl', 'Online-Betrug','Spam', 'Posta indesiderata', 
+    'Messaggi non richiesti', 'Posta spazzatura', 'Invio massivo di email',
+    'Spam', 'Unsolicited email', 'Junk mail', 'Email overload', 'Bulk messaging',
+    'Spam', 'Unerwünschte E-Mails', 'Junk-Mail', 'E-Mail-Überflutung', 'Massenversand von Nachrichten',
+    'Posta non desiderata', 'Messaggi di spam', 'Comunicazioni indesiderate',
+    'Unwanted mail', 'Spam messages', 'Unsolicited communications',
+    'Unerwünschte Post', 'Spam-Nachrichten', 'Ungebetene Kommunikation']
+
+pattern = r'\b(?:' + '|'.join(related_words) + r')\b'
+
+# Filter the DataFrame to keep only rows containing the related words
+filtered_df_1_email = df_1_email[df_1_email['Text'].str.contains(pattern, case=False)]
+filtered_df_1_email = filtered_df_1_email.reset_index(drop=True)
+
+filtered_df_1_email
+
+
+filtered_df_1_email
+
+
+#specify number of rows in each chunk
+n=5
+#split DataFrame into chunks
+list_df = [filtered_df_1_email[i:i+n] for i in range(0,len(filtered_df_1_email),n)]
+    #print(list_df)
+
+
+
+len(list_df)
+
+
+list_df[17]
+
+
+def put_together():
+    list1=[]
+    for index in range(0,17):
+        res = ''.join(map(str,list_df[index]['Text']))
+        #print('Result:\n',res,'\n')
+        print(f'Result {index}:\n{res}\n')
+        list1.append(res)
+    return list1
+
+
+summ_block = put_together()
+summ_block
+
+
+## Skip the block if it's in the list of blocks to skip
+def put_together(blocks_to_skip=[]):
+    list1 = []
+    for index in range(0, 17):
+        if index in blocks_to_skip:
+            continue  # Skip the block if it's in the list of blocks to skip
+
+        res = ''.join(map(str, list_df[index]['Text']))
+        print(f'Result {index}:\n{res}\n')
+        list1.append(res)
+    return list1
+
+
+
+blocks_to_skip = [15]  # List of block numbers to skip
+result_list = put_together(blocks_to_skip)
+
+
+
+summ_block_test = put_together(blocks_to_skip)
+summ_block_test
+
+
+pip install transformers
+
+
+from transformers import pipeline
+# Create a summarization pipeline with the specified model.
+summarizer = pipeline("summarization", model="philschmid/bart-large-cnn-samsum")
+
+# Define a function to perform summarization.
+def final_summ():
+    my_list = []
+
+    # Iterate through the comments in 'summ_block'
+    for index in range(len(summ_block_test)):
+        comment = summ_block_test[index]
+        prova = summarizer(comment)
+        my_list.append(prova)
+
+    return my_list
+
+# Call the 'final_summ' function to generate summaries.
+summ_block_test = final_summ()
+summ_block_test
+
+
+import pickle
+
+
+picklefile = "filtered_df_1_email.pkl"
+with open(picklefile, "wb") as pkl_wb_obj:
+    pickle.dump(summ_block_test, pkl_wb_obj)
+
+
+picklefile = "filtered_df_1_email.pkl"
+with open(picklefile, "rb") as pkl_rb_obj:
+	summ_block = pickle.load(pkl_rb_obj)
+print(summ_block)
+
+
+import pandas as pd
+
+df = pd.DataFrame(summ_block)
+# Save the DataFrame to a CSV file
+df.to_csv('filtered_df_1_email.csv', index=False)
